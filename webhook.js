@@ -45,7 +45,7 @@ function longPoll(client) {
         }
     };
 
-    setInterval(poll, 1000);
+    setInterval(poll, 10000);
 }
 
 module.exports = {
