@@ -27,7 +27,7 @@ function longPoll(client) {
                     return;
                 }
 
-                const embed = new MessageEmbed().setTitle("New Notification");
+                const embed = new MessageEmbed().setTitle("New DannuSecurity Notification");
                 const fields = new Array();
                 for(var obj in data) {
                     if (obj == "date" || obj == "discord_channel") continue;
