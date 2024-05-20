@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 function longPoll(client) {
     let checkpoint = new Date();
@@ -27,7 +27,7 @@ function longPoll(client) {
                     return;
                 }
 
-                const embed = new MessageEmbed().setTitle("New DannuSecurity Notification");
+                const embed = new EmbedBuilder().setTitle("New DannuSecurity Notification");
                 const fields = new Array();
                 for(var obj in data) {
                     if (obj == "date" || obj == "discord_channel") continue;
