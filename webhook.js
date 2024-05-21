@@ -12,7 +12,7 @@ function longPoll(client) {
             console.error('Error fetching data:', error);
             throw error;
         }
-    }
+    };
 
     const poll = async () => {
         try {
@@ -20,25 +20,27 @@ function longPoll(client) {
             const messageDate = new Date(data.date);
             if (messageDate > checkpoint) {
                 checkpoint = messageDate;
-                
+
                 const channel = client.channels.cache.get(data.discord_channel);
                 if (!channel) {
                     console.error('Channel not found');
                     return;
                 }
 
-                const embed = new EmbedBuilder().setTitle("New DannuSecurity Notification");
-                const fields = new Array();
-                for(var obj in data) {
-                    if (obj == "date" || obj == "discord_channel") continue;
-                    fields.push({name: obj, value: data[obj] + "     ", inline: true});
-                }
-                embed.setFields(fields);
-                embed.setTimestamp(data.date);
-                embed.setColor("#50bc14");
-                embed.setThumbnail("https://dannus.net/media/logo.png");
-                channel.send({ embeds: [embed] });
+                const embed = new EmbedBuilder()
+                    .setTitle("New DannuSecurity Notification")
+                    .setTimestamp(new Date(data.date)) // Ensure the date is converted to a Date object
+                    .setColor("#50bc14")
+                    .setThumbnail("https://dannus.net/media/logo.png");
 
+                const fields = [];
+                for (const obj in data) {
+                    if (obj === "date" || obj === "discord_channel") continue;
+                    fields.push({ name: obj, value: `${data[obj]} `, inline: true });
+                }
+                embed.addFields(fields);
+                
+                channel.send({ embeds: [embed] });
             }
         } catch (error) {
             console.error('Error during polling:', error);

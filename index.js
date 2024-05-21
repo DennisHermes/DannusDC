@@ -22,6 +22,7 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('[Dannus] Done loading!');
+	webhook.longPoll(client);
 });
 
 client.on('interactionCreate', async interaction => {
