@@ -1,16 +1,22 @@
 const axios = require('axios');
-const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder } = require('discord.js');
 
 function longPoll(client) {
     let checkpoint = new Date();
 
-    const fetchData = async () => {
+    const fetchData = async (retries = 5, delay = 5000) => {
         try {
             const response = await axios.get('https://dannus.net/api/plugins/receive');
             return response.data;
         } catch (error) {
-            console.error('Error fetching data:', error);
-            throw error;
+            if (retries === 0) {
+                console.error('Error fetching data:', error);
+                throw error;
+            } else {
+                console.warn(`Retrying... (${retries} retries left)`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return fetchData(retries - 1, delay);
+            }
         }
     };
 
@@ -29,7 +35,7 @@ function longPoll(client) {
 
                 const embed = new EmbedBuilder()
                     .setTitle("New DannuSecurity Notification")
-                    .setTimestamp(new Date(data.date)) // Ensure the date is converted to a Date object
+                    .setTimestamp(new Date(data.date))
                     .setColor("#50bc14")
                     .setThumbnail("https://dannus.net/media/logo.png");
 
@@ -39,7 +45,7 @@ function longPoll(client) {
                     fields.push({ name: obj, value: `${data[obj]} `, inline: true });
                 }
                 embed.addFields(fields);
-                
+
                 channel.send({ embeds: [embed] });
             }
         } catch (error) {
